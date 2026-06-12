@@ -54,12 +54,20 @@ async function proxyRequest(request: NextRequest, context: RouteContext) {
 
   const body = ["GET", "HEAD"].includes(request.method) ? undefined : await request.arrayBuffer();
 
-  const upstream = await fetch(targetUrl, {
-    method: request.method,
-    headers,
-    body,
-    cache: "no-store",
-  });
+  let upstream: Response;
+  try {
+    upstream = await fetch(targetUrl, {
+      method: request.method,
+      headers,
+      body,
+      cache: "no-store",
+    });
+  } catch {
+    return Response.json(
+      { detail: "Backend service is unavailable. Please try again in a moment." },
+      { status: 502 },
+    );
+  }
 
   const responseHeaders = new Headers(upstream.headers);
   for (const header of hopByHopHeaders) {

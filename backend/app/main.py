@@ -68,9 +68,12 @@ app.include_router(analyze_router, prefix="/api")
 app.include_router(auth_router, prefix="/api")
 app.include_router(export_router, prefix="/api")
 app.include_router(generate_router, prefix="/api")
+
+
 @app.get("/")
 async def root():
     return {"status": "ok", "message": "CV Analyzer API is running"}
+
 
 @app.on_event("startup")
 def on_startup() -> None:

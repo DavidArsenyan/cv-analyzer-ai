@@ -25,6 +25,11 @@ if not JWT_SECRET_KEY:
     if ENV == "production":
         raise RuntimeError("JWT_SECRET_KEY must be set when ENV=production.")
     JWT_SECRET_KEY = "change-this-secret-in-production"
+if ENV == "production" and (
+    JWT_SECRET_KEY in {"change-this-secret-in-production", "local-dev-secret-at-least-32-chars"}
+    or len(JWT_SECRET_KEY) < 32
+):
+    raise RuntimeError("JWT_SECRET_KEY must be a strong production secret.")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "1440"))
 EMAIL_VERIFICATION_EXPIRE_MINUTES = int(os.getenv("EMAIL_VERIFICATION_EXPIRE_MINUTES", "15"))
