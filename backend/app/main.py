@@ -11,9 +11,11 @@ from app.routes.analyze import router as analyze_router
 from app.routes.auth import router as auth_router
 from app.routes.export import router as export_router
 from app.routes.generate import router as generate_router
+from app.services.monitoring import init_monitoring
 
 
 ENV = os.getenv("ENV", "development").lower()
+init_monitoring()
 
 
 def _allowed_origins() -> list[str]:

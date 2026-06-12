@@ -22,6 +22,8 @@ AI-assisted resume analysis platform for ATS scoring, job-fit feedback, skill ga
 - PDF report export
 - Per-user analysis history
 - PostgreSQL persistence
+- Optional Sentry error monitoring
+- Optional Google Analytics tracking
 - Docker Compose full-stack setup
 
 ## Screenshots
@@ -93,6 +95,9 @@ JWT_ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=1440
 MAX_UPLOAD_BYTES=5242880
 MAX_PDF_PAGES=30
+SENTRY_DSN=
+SENTRY_TRACES_SAMPLE_RATE=0.05
+NEXT_PUBLIC_GA_MEASUREMENT_ID=
 ```
 
 Never commit `.env` or real API keys.
