@@ -26,20 +26,25 @@ AI-assisted resume analysis platform for ATS scoring, job-fit feedback, skill ga
 
 ## Screenshots
 
-Add screenshots before publishing the portfolio version:
+### Resume Workspace
 
-```text
-docs/screenshots/dashboard.png
-docs/screenshots/analysis-result.png
-docs/screenshots/ai-tools.png
-```
+![Resume workspace](docs/screenshots/resume-workspace.png)
 
-Recommended views:
+### Analysis Results
 
-- Login / resume workspace
-- Analysis results
-- AI tools tab
-- Export/history tab
+![Analysis results](docs/screenshots/analysis-results.png)
+
+### AI Tools
+
+![AI tools](docs/screenshots/ai-tools.png)
+
+### Analysis History
+
+![Analysis history](docs/screenshots/history.png)
+
+### Email Verification
+
+![Email verification](docs/screenshots/email-verification.png)
 
 ## Tech Stack
 
