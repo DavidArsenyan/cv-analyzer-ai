@@ -55,7 +55,7 @@ AI-assisted resume analysis platform for ATS scoring, job-fit feedback, skill ga
 - Database: PostgreSQL, SQLAlchemy, Alembic
 - Auth: JWT, passlib/bcrypt
 - AI providers: OpenAI API, Groq OpenAI-compatible API
-- Local NLP: sentence-transformers
+- Optional local NLP: sentence-transformers
 - File parsing: PyMuPDF, python-docx
 - PDF export: ReportLab
 - Deployment: Docker Compose, VPS/Render/Railway-ready structure
@@ -95,6 +95,8 @@ JWT_ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=1440
 MAX_UPLOAD_BYTES=5242880
 MAX_PDF_PAGES=30
+ENABLE_LOCAL_NLP=false
+NEXT_PUBLIC_ENABLE_LOCAL_NLP=false
 SENTRY_DSN=
 SENTRY_TRACES_SAMPLE_RATE=0.05
 NEXT_PUBLIC_GA_MEASUREMENT_ID=
@@ -218,6 +220,29 @@ alembic upgrade head
 ```
 
 The backend Docker container runs migrations automatically before starting the API.
+
+## Optional Job-Skill Dataset Enrichment
+
+## Optional Local NLP
+
+The default Docker image is production-lite and does not install PyTorch or sentence-transformers. This keeps small hosts such as Railway trial/Hobby cheaper and more stable.
+
+For local experiments with semantic scoring, install optional NLP dependencies:
+
+```powershell
+cd backend
+..\.venv\Scripts\activate
+pip install -r requirements-nlp.txt
+```
+
+Then enable the local NLP mode:
+
+```env
+ENABLE_LOCAL_NLP=true
+NEXT_PUBLIC_ENABLE_LOCAL_NLP=true
+```
+
+Leave these disabled on small production hosts.
 
 ## Optional Job-Skill Dataset Enrichment
 

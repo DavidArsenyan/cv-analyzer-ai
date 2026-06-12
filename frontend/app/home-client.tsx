@@ -42,6 +42,7 @@ type AuthUser = { id: number; email: string; is_email_verified: boolean };
 type ActiveTab = "analysis" | "tools" | "documents" | "history";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
+const enableLocalNlp = process.env.NEXT_PUBLIC_ENABLE_LOCAL_NLP === "true";
 const maxResumeBytes = 5 * 1024 * 1024;
 const allowedResumeExtensions = [".pdf", ".docx", ".txt"];
 
@@ -640,7 +641,7 @@ export default function Home() {
                 <select value={analysisMode} onChange={(e) => setAnalysisMode(e.target.value)}>
                   <option value="groq">Groq Llama</option>
                   <option value="openai">OpenAI GPT</option>
-                  <option value="nlp_local">Local Intelligence</option>
+                  {enableLocalNlp ? <option value="nlp_local">Local Intelligence</option> : null}
                 </select>
               </div>
 

@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-import re
 import json
+import os
+import re
 from functools import lru_cache
 from pathlib import Path
 from typing import Optional
@@ -512,11 +513,11 @@ def analyze_resume(
         fallback_result = analyze_resume_locally(
             resume_text=resume_text,
             job_description=job_description,
-            use_nlp=True,
+            use_nlp=_local_nlp_enabled(),
         )
         fallback_result.fallback_notice = (
             f"{_provider_label(normalized_mode)} is unavailable, rate-limited, or returned an invalid response. "
-            "Local Intelligence was used instead."
+            "Local analysis was used instead."
         )
         return fallback_result
 
@@ -530,8 +531,12 @@ def analyze_resume(
     return analyze_resume_locally(
         resume_text=resume_text,
         job_description=job_description,
-        use_nlp=True,
+        use_nlp=_local_nlp_enabled(),
     )
+
+
+def _local_nlp_enabled() -> bool:
+    return os.getenv("ENABLE_LOCAL_NLP", "false").lower() == "true"
 
 
 def _provider_label(provider: str) -> str:

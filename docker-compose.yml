@@ -27,6 +27,7 @@ services:
       - GENERATION_RATE_WINDOW_SECONDS=${GENERATION_RATE_WINDOW_SECONDS:-3600}
       - SENTRY_DSN=${SENTRY_DSN:-}
       - SENTRY_TRACES_SAMPLE_RATE=${SENTRY_TRACES_SAMPLE_RATE:-0.05}
+      - ENABLE_LOCAL_NLP=${ENABLE_LOCAL_NLP:-false}
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)\""]
       interval: 10s
@@ -49,6 +50,7 @@ services:
         NEXT_PUBLIC_ADSENSE_SLOT_DOCUMENTS: ${NEXT_PUBLIC_ADSENSE_SLOT_DOCUMENTS:-}
         NEXT_PUBLIC_ADSENSE_SLOT_HISTORY: ${NEXT_PUBLIC_ADSENSE_SLOT_HISTORY:-}
         NEXT_PUBLIC_GA_MEASUREMENT_ID: ${NEXT_PUBLIC_GA_MEASUREMENT_ID:-}
+        NEXT_PUBLIC_ENABLE_LOCAL_NLP: ${NEXT_PUBLIC_ENABLE_LOCAL_NLP:-false}
     ports:
       - "3000:3000"
     environment:

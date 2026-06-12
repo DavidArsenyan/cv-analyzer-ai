@@ -6,9 +6,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 COPY requirements.txt .
-COPY constraints-docker.txt .
-RUN pip install --no-cache-dir torch==2.5.1+cpu --index-url https://download.pytorch.org/whl/cpu
-RUN pip install --no-cache-dir -r requirements.txt -c constraints-docker.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app ./app
 COPY alembic ./alembic
