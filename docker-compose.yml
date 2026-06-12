@@ -1,0 +1,64 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env
+    ports:
+      - "8000:8000"
+    environment:
+      - ENV=${ENV:-development}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-cv_user}:${POSTGRES_PASSWORD:-local-postgres-password}@db:5432/${POSTGRES_DB:-cv_analyzer}
+      - FRONTEND_ORIGIN=${FRONTEND_ORIGIN:-http://localhost:3000}
+      - FRONTEND_ORIGINS=${FRONTEND_ORIGINS:-["http://localhost:3000"]}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-local-dev-secret-at-least-32-chars}
+      - JWT_ALGORITHM=${JWT_ALGORITHM:-HS256}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-1440}
+      - MAX_UPLOAD_BYTES=${MAX_UPLOAD_BYTES:-5242880}
+      - MAX_PDF_PAGES=${MAX_PDF_PAGES:-30}
+      - AUTH_RATE_LIMIT=${AUTH_RATE_LIMIT:-10}
+      - AUTH_RATE_WINDOW_SECONDS=${AUTH_RATE_WINDOW_SECONDS:-60}
+      - ANALYSIS_RATE_LIMIT=${ANALYSIS_RATE_LIMIT:-20}
+      - ANALYSIS_RATE_WINDOW_SECONDS=${ANALYSIS_RATE_WINDOW_SECONDS:-3600}
+      - GUEST_ANALYSIS_RATE_LIMIT=${GUEST_ANALYSIS_RATE_LIMIT:-1}
+      - GUEST_ANALYSIS_RATE_WINDOW_SECONDS=${GUEST_ANALYSIS_RATE_WINDOW_SECONDS:-86400}
+      - GENERATION_RATE_LIMIT=${GENERATION_RATE_LIMIT:-30}
+      - GENERATION_RATE_WINDOW_SECONDS=${GENERATION_RATE_WINDOW_SECONDS:-3600}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+        INTERNAL_API_URL: ${INTERNAL_API_URL:-http://backend:8000}
+        NEXT_PUBLIC_ADSENSE_CLIENT: ${NEXT_PUBLIC_ADSENSE_CLIENT:-}
+        NEXT_PUBLIC_ADSENSE_SLOT_TOOLS: ${NEXT_PUBLIC_ADSENSE_SLOT_TOOLS:-}
+        NEXT_PUBLIC_ADSENSE_SLOT_DOCUMENTS: ${NEXT_PUBLIC_ADSENSE_SLOT_DOCUMENTS:-}
+        NEXT_PUBLIC_ADSENSE_SLOT_HISTORY: ${NEXT_PUBLIC_ADSENSE_SLOT_HISTORY:-}
+    ports:
+      - "3000:3000"
+    environment:
+      - INTERNAL_API_URL=${INTERNAL_API_URL:-http://backend:8000}
+    depends_on:
+      - backend
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-cv_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-local-postgres-password}
+      - POSTGRES_DB=${POSTGRES_DB:-cv_analyzer}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:

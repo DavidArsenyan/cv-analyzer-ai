@@ -1,0 +1,36 @@
+.venv/
+.idea/
+__pycache__/
+*.py[cod]
+
+# Env files
+.env
+.env.local
+backend/.env
+frontend/.env
+frontend/.env.local
+*.env
+*.env.production
+*.env.staging
+
+.pytest_cache/
+.mypy_cache/
+node_modules/
+.next/
+dist/
+build/
+coverage/
+*.log
+*.db
+uploads/
+backend/app/data/job_skill_profiles.generated.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local Docker overrides
+docker-compose.override.yml
+
+# Local scratch scripts
+my_analysis.py
