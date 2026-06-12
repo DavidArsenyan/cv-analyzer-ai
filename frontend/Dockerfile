@@ -47,4 +47,4 @@ COPY --from=builder /app/node_modules ./node_modules
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start"]
+CMD ["sh", "-c", "npm run start -- -p ${PORT:-3000}"]
