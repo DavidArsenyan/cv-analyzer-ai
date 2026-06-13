@@ -67,9 +67,15 @@ def resend_verification(
         return VerificationRequiredResponse(email=user.email, detail="Email is already verified.")
 
     code = create_email_verification_code(db=db, user=user)
+    # try:
+    #     send_verification_email(user.email, code)
+    # except Exception as exc:
+    #     raise HTTPException(status_code=500, detail=str(exc)) from exc
     try:
         send_verification_email(user.email, code)
     except Exception as exc:
+        # This will scream the EXACT error into your Railway text stream
+        print(f"!!! EMAIL FAILURE TRACE: {exc}", flush=True)
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
     return VerificationRequiredResponse(email=user.email, detail="Verification code sent.")
