@@ -100,7 +100,9 @@ def _send_with_resend_api(recipient_email: str, code: str) -> None:
         data=json.dumps(payload).encode("utf-8"),
         headers={
             "Authorization": f"Bearer {api_key}",
+            "Accept": "application/json",
             "Content-Type": "application/json",
+            "User-Agent": "CV Analyzer AI/1.0 (https://cvanalyzerai.com)",
         },
         method="POST",
     )
