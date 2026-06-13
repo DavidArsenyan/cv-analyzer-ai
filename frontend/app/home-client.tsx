@@ -175,6 +175,24 @@ const Icons = {
       <line x1="16.24" y1="7.76" x2="19.07" y2="4.93" />
     </svg>
   ),
+  sun: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="4" />
+      <line x1="12" y1="2" x2="12" y2="4" />
+      <line x1="12" y1="20" x2="12" y2="22" />
+      <line x1="4.93" y1="4.93" x2="6.34" y2="6.34" />
+      <line x1="17.66" y1="17.66" x2="19.07" y2="19.07" />
+      <line x1="2" y1="12" x2="4" y2="12" />
+      <line x1="20" y1="12" x2="22" y2="12" />
+      <line x1="6.34" y1="17.66" x2="4.93" y2="19.07" />
+      <line x1="19.07" y1="4.93" x2="17.66" y2="6.34" />
+    </svg>
+  ),
+  moon: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 12.8A8.7 8.7 0 1 1 11.2 3 6.8 6.8 0 0 0 21 12.8z" />
+    </svg>
+  ),
 };
 
 export default function Home() {
@@ -198,14 +216,21 @@ export default function Home() {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [activeTab, setActiveTab] = useState<ActiveTab>("analysis");
   const [dragOver, setDragOver] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
     const savedToken = window.localStorage.getItem("cv_analyzer_token");
     const savedUser = window.localStorage.getItem("cv_analyzer_user");
     const savedAnalysisMode = window.localStorage.getItem("cv_analyzer_analysis_mode");
     const savedActiveTab = window.localStorage.getItem("cv_analyzer_active_tab") as ActiveTab | null;
+    const savedTheme = window.localStorage.getItem("cv_analyzer_theme");
 
     if (savedAnalysisMode) setAnalysisMode(savedAnalysisMode);
+    if (savedTheme === "light" || savedTheme === "dark") {
+      setTheme(savedTheme);
+    } else if (window.matchMedia?.("(prefers-color-scheme: dark)").matches) {
+      setTheme("dark");
+    }
     window.localStorage.removeItem("cv_analyzer_last_result");
     window.localStorage.removeItem("cv_analyzer_generated_content");
     window.localStorage.removeItem("cv_analyzer_job_description");
@@ -227,6 +252,11 @@ export default function Home() {
   useEffect(() => {
     window.localStorage.setItem("cv_analyzer_active_tab", activeTab);
   }, [activeTab]);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    window.localStorage.setItem("cv_analyzer_theme", theme);
+  }, [theme]);
 
   async function loadHistory(activeToken = token) {
     if (!activeToken) {
@@ -527,6 +557,16 @@ export default function Home() {
         </button>
 
         <div className="topbar-right">
+          <button
+            className="theme-toggle"
+            type="button"
+            onClick={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
+            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+            title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+          >
+            <span className="theme-toggle-icon">{theme === "dark" ? Icons.sun : Icons.moon}</span>
+            <span>{theme === "dark" ? "Light" : "Dark"}</span>
+          </button>
           {user ? (
             <>
               <div className="avatar">{user.email.slice(0, 2).toUpperCase()}</div>
