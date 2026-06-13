@@ -29,16 +29,13 @@ export async function POST(request: NextRequest, context: RouteContext) {
   return proxyRequest(request, context);
 }
 
-export async function PUT(request: NextRequest, context: RouteContext) {
-  return proxyRequest(request, context);
-}
-
-export async function PATCH(request: NextRequest, context: RouteContext) {
-  return proxyRequest(request, context);
-}
-
-export async function DELETE(request: NextRequest, context: RouteContext) {
-  return proxyRequest(request, context);
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      Allow: "GET, POST, OPTIONS",
+    },
+  });
 }
 
 async function proxyRequest(request: NextRequest, context: RouteContext) {
