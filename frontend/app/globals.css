@@ -1001,6 +1001,8 @@ button, input, select, textarea { font: inherit; }
 
 /* ── Shell ── */
 .shell {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   padding: 20px 24px 40px;
 }
@@ -1140,6 +1142,8 @@ button, input, select, textarea { font: inherit; }
 
 /* ── Workspace ── */
 .workspace {
+  width: 100%;
+  flex: 1;
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr);
   gap: 20px;
@@ -2314,9 +2318,11 @@ li strong { color: var(--text1); font-weight: 700; }
 }
 
 .site-footer {
+  width: 100%;
   max-width: 1760px;
-  margin: 22px auto 0;
+  margin: auto auto 0;
   padding: 0 4px;
+  padding-top: 28px;
 }
 
 .footer-links {
