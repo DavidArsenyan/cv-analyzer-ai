@@ -242,6 +242,12 @@ ENABLE_LOCAL_NLP=true
 NEXT_PUBLIC_ENABLE_LOCAL_NLP=true
 ```
 
+For Docker/Railway deployments, also enable optional dependency installation during the backend image build:
+
+```env
+INSTALL_LOCAL_NLP=true
+```
+
 Leave these disabled on small production hosts.
 
 ## Optional Job-Skill Dataset Enrichment

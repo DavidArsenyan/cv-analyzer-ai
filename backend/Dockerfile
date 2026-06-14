@@ -6,7 +6,10 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 COPY requirements.txt .
+COPY requirements-nlp.txt .
+ARG INSTALL_LOCAL_NLP=false
 RUN pip install --no-cache-dir -r requirements.txt
+RUN if [ "$INSTALL_LOCAL_NLP" = "true" ]; then pip install --no-cache-dir -r requirements-nlp.txt; fi
 
 COPY app ./app
 COPY alembic ./alembic
