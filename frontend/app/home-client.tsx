@@ -752,6 +752,16 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <footer className="site-footer">
+        <div className="footer-links" aria-label="Helpful pages">
+          <a href="/free-resume-analyzer">Free Resume Analyzer</a>
+          <a href="/ats-resume-checker">ATS Resume Checker</a>
+          <a href="/resume-job-match-checker">Resume Job Match Checker</a>
+          <a href="/privacy-policy">Privacy Policy</a>
+          <a href="/terms">Terms</a>
+          <a href="/contact">Contact</a>
+        </div>
+      </footer>
     </main>
   );
 }
