@@ -113,6 +113,10 @@ SKILL_KEYWORDS = {
     "lead generation": ["lead generation", "prospecting"],
     "account management": ["account management"],
     "customer service": ["customer service", "customer support"],
+    "banking": ["banking", "bank", "bank teller"],
+    "financial services": ["financial services", "retail banking", "bank operations"],
+    "cash handling": ["cash handling", "cash operations", "cashier"],
+    "compliance": ["compliance", "regulatory compliance", "aml", "kyc"],
     "project management": ["project management", "управление проектами", "նախագծերի կառավարում"],
     "risk management": ["risk management"],
     "product management": ["product management"],
@@ -373,6 +377,24 @@ ROLE_PROFILES = {
         "budgeting",
         "data analysis",
         "power bi",
+    ],
+    "banking": [
+        "banking",
+        "financial services",
+        "customer service",
+        "compliance",
+        "risk management",
+        "account management",
+        "excel",
+        "communication",
+    ],
+    "bank teller": [
+        "banking",
+        "customer service",
+        "financial services",
+        "cash handling",
+        "compliance",
+        "communication",
     ],
     "sales manager": [
         "sales",
@@ -834,6 +856,8 @@ def _infer_required_skills(job_text: str) -> list[str]:
         required = _merge_unique(required, ROLE_PROFILES["translator"])
     if (_contains_keyword(job_text, "accounting") or _contains_keyword(job_text, "accountant")) and _is_weak_required_skill_set(required):
         required = _merge_unique(required, ROLE_PROFILES["accountant"])
+    if (_contains_keyword(job_text, "banking") or _contains_keyword(job_text, "bank teller") or _contains_keyword(job_text, "bank")) and _is_weak_required_skill_set(required):
+        required = _merge_unique(required, ROLE_PROFILES["banking"])
     if _contains_keyword(job_text, "sales") and _is_weak_required_skill_set(required):
         required = _merge_unique(required, ROLE_PROFILES["sales manager"])
     if _contains_keyword(job_text, "designer") and _is_weak_required_skill_set(required):

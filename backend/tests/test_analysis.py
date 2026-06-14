@@ -61,6 +61,18 @@ class LocalAnalysisTests(unittest.TestCase):
         self.assertIn("proofreading", result.detected_skills)
         self.assertIn("cat tools", result.detected_skills)
 
+    def test_banking_title_reports_multiple_missing_skills_for_sparse_resume(self) -> None:
+        resume = "Worked with clients and prepared daily office documents."
+
+        result = analyze_resume(resume, "banking", "local")
+        missing = [gap.skill for gap in result.missing_skills]
+
+        self.assertGreaterEqual(len(missing), 5)
+        self.assertIn("banking", missing)
+        self.assertIn("financial services", missing)
+        self.assertIn("compliance", missing)
+        self.assertIn("risk management", missing)
+
     def test_devops_role_profile_has_stable_missing_skills(self) -> None:
         resume = "Built Docker services and automated deployment scripts. Improved release speed by 30%."
 
