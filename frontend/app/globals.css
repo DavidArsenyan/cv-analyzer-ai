@@ -2315,7 +2315,7 @@ li strong { color: var(--text1); font-weight: 700; }
 
 .site-footer {
   max-width: 1760px;
-  margin: 22px auto 0;
+  margin: clamp(32px, 8vh, 90px) auto 0;
   padding: 0 4px;
 }
 
