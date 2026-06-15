@@ -2,6 +2,8 @@
 
 AI-assisted resume analysis platform for ATS scoring, job-fit feedback, skill gap detection, and AI-generated career documents.
 
+Live app: https://cvanalyzerai.com
+
 ## Features
 
 - Resume upload: PDF, DOCX, TXT
