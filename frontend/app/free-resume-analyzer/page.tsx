@@ -64,7 +64,7 @@ export default function FreeResumeAnalyzerPage() {
     <SeoPage
       eyebrow="Free Resume Analyzer"
       title="Free AI resume analyzer for practical resume feedback"
-      description="Upload a resume, add a job title or job description, and get clear feedback before you apply."
+      description="CV Analyzer AI is a free resume analysis tool that checks your resume for ATS readiness, job fit, missing skills, strengths, weaknesses, and practical improvements. Upload a PDF, DOCX, or TXT resume, add a job title or description, and get clear feedback before applying."
     >
       <script
         type="application/ld+json"
