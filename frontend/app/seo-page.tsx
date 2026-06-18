@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { ReactNode } from "react";
 
 type SeoPageProps = {
@@ -13,8 +14,7 @@ export function SeoPage({ eyebrow, title, description, children }: SeoPageProps)
     <main className="seo-shell">
       <nav className="seo-nav" aria-label="Site navigation">
         <Link href="/" className="seo-brand">
-          <span className="seo-logo">CV</span>
-          <span>CV Analyzer AI</span>
+          <Image className="seo-logo-image" src="/brand-logo.png" alt="CV Analyzer AI" width={304} height={230} priority />
         </Link>
         <div className="seo-nav-links">
           <Link href="/free-resume-analyzer">Resume Analyzer</Link>
@@ -37,4 +37,3 @@ export function SeoPage({ eyebrow, title, description, children }: SeoPageProps)
     </main>
   );
 }
-
