@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { FormEvent, ReactNode, useEffect, useState } from "react";
 
 type SkillGap = { skill: string; reason: string };
@@ -550,7 +549,11 @@ export default function Home() {
     <main className="shell">
       <header className="topbar">
         <button className="brand brand-button" type="button" onClick={clearWorkspaceState} aria-label="Reset workspace">
-          <Image className="brand-logo-image" src="/brand-logo.png" alt="CV Analyzer AI" width={304} height={230} priority />
+          <div className="logo-icon">CV</div>
+          <div className="brand-text">
+            <span className="brand-sub">AI Career Assistant</span>
+            <span className="brand-name">CV Analyzer</span>
+          </div>
         </button>
 
         <div className="topbar-right">

@@ -1046,13 +1046,6 @@ button, input, select, textarea { font: inherit; }
   transform: none;
 }
 
-.brand-logo-image {
-  display: block;
-  width: 86px;
-  height: auto;
-  border-radius: 8px;
-}
-
 .logo-icon {
   display: grid;
   place-items: center;
@@ -2206,13 +2199,6 @@ li strong { color: var(--text1); font-weight: 700; }
   background: linear-gradient(135deg, var(--accent), var(--accent-mid));
   color: #fff;
   font-size: 12px;
-}
-
-.seo-logo-image {
-  display: block;
-  width: 92px;
-  height: auto;
-  border-radius: 8px;
 }
 
 .seo-nav-links {
