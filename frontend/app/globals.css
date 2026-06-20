@@ -1902,7 +1902,7 @@ button:disabled {
   font-weight: 600;
   color: var(--text1);
   transition: border-color var(--transition), background var(--transition), color var(--transition), transform var(--transition);
-  animation: analysisChipReveal 0.45s ease both;
+  animation: analysisChipCycle 5.4s ease-in-out infinite;
 }
 
 .chips span:nth-child(1) { animation-delay: 0.10s; }
@@ -1944,7 +1944,7 @@ li strong { color: var(--text1); font-weight: 700; }
 
 /* ── Summary ── */
 .section-panel ul li {
-  animation: analysisLineReveal 0.45s ease both;
+  animation: analysisLineCycle 5.4s ease-in-out infinite;
 }
 
 .section-panel ul li:nth-child(1) { animation-delay: 0.10s; }
@@ -1954,25 +1954,27 @@ li strong { color: var(--text1); font-weight: 700; }
 .section-panel ul li:nth-child(5) { animation-delay: 0.70s; }
 .section-panel ul li:nth-child(6) { animation-delay: 0.85s; }
 
-@keyframes analysisChipReveal {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  to {
-    opacity: 1;
+@keyframes analysisChipCycle {
+  0%, 68%, 100% {
     transform: translateY(0);
+    box-shadow: none;
+  }
+  12%, 26% {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.07);
   }
 }
 
-@keyframes analysisLineReveal {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
+@keyframes analysisLineCycle {
+  0%, 68%, 100% {
+    color: var(--text2);
     transform: translateY(0);
+    text-shadow: none;
+  }
+  12%, 26% {
+    color: var(--text1);
+    transform: translateY(-1px);
+    text-shadow: 0 0 10px rgba(148, 163, 184, 0.20);
   }
 }
 
