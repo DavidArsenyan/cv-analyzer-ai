@@ -1934,19 +1934,17 @@ li strong { color: var(--text1); font-weight: 700; }
 
 /* ── Summary ── */
 .analysis-list li {
-  animation: analysisLineCycle 6.8s ease-in-out infinite;
+  animation: analysisLineCycle 11.5s ease-in-out infinite;
 }
 
 @keyframes analysisLineCycle {
-  0%, 78%, 100% {
+  0%, 6%, 28%, 100% {
     color: var(--text2);
-    transform: translateY(0);
     text-shadow: none;
   }
-  8%, 18% {
+  12%, 18% {
     color: var(--text1);
-    transform: translateY(-1px);
-    text-shadow: 0 0 10px rgba(148, 163, 184, 0.20);
+    text-shadow: none;
   }
 }
 
