@@ -1937,6 +1937,80 @@ li strong { color: var(--text1); font-weight: 700; }
 .weaknesses-list li::marker { color: var(--danger); }
 
 /* ── Summary ── */
+.insight-list {
+  display: grid;
+  gap: 9px;
+}
+
+.insight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  padding: 11px 12px;
+  color: var(--text2);
+  transition: border-color var(--transition), background var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+
+.insight-item:hover {
+  border-color: rgba(13,122,95,0.28);
+  background: var(--surface);
+  box-shadow: 0 8px 20px rgba(15,23,42,0.05);
+  transform: translateY(-1px);
+}
+
+.insight-item strong {
+  display: block;
+  color: var(--text1);
+  font-size: 13px;
+  margin-bottom: 3px;
+}
+
+.insight-item p {
+  margin: 0;
+  color: var(--text2);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.insight-dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  margin-top: 6px;
+  background: var(--warning);
+}
+
+.insight-dot-accent,
+.insight-dot-success {
+  background: var(--accent);
+}
+
+.insight-dot-danger {
+  background: var(--danger);
+}
+
+.insight-danger:hover {
+  border-color: rgba(220,38,38,0.22);
+}
+
+.summary-card {
+  border-left: 3px solid var(--accent);
+  background: var(--accent-light);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 14px 16px;
+}
+
+.summary-card strong {
+  display: block;
+  color: var(--text1);
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
 .summary {
   font-size: 14px;
   line-height: 1.7;
