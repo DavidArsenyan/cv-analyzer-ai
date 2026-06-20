@@ -1937,13 +1937,17 @@ li strong { color: var(--text1); font-weight: 700; }
   animation: analysisLineCycle 11.5s ease-in-out infinite;
 }
 
+.analysis-list li strong {
+  color: inherit;
+}
+
 @keyframes analysisLineCycle {
   0%, 6%, 28%, 100% {
-    color: var(--text2);
+    color: var(--text1);
     text-shadow: none;
   }
   12%, 18% {
-    color: var(--text1);
+    color: var(--text2);
     text-shadow: none;
   }
 }
