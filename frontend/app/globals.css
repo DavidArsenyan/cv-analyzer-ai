@@ -1944,11 +1944,15 @@ li strong { color: var(--text1); font-weight: 700; }
 @keyframes analysisLineCycle {
   0%, 6%, 28%, 100% {
     color: var(--text1);
+    transform: translateY(0);
     text-shadow: none;
+    filter: none;
   }
   12%, 18% {
     color: var(--text2);
-    text-shadow: none;
+    transform: translateY(1px);
+    text-shadow: 0 1px 0 rgba(15, 23, 42, 0.08);
+    filter: brightness(0.96);
   }
 }
 
