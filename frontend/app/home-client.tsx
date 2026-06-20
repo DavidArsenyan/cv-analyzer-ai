@@ -340,6 +340,10 @@ export default function Home() {
       }
       setToken(payload.access_token);
       setUser(payload.user);
+      setPassword("");
+      setVerificationCode("");
+      setVerificationEmail("");
+      setAuthMode("login");
       window.localStorage.setItem("cv_analyzer_token", payload.access_token);
       window.localStorage.setItem("cv_analyzer_user", JSON.stringify(payload.user));
       await loadHistory(payload.access_token);
@@ -439,6 +443,7 @@ export default function Home() {
       setVerificationEmail("");
       setEmail("");
       setPassword("");
+      setAuthMode("login");
       window.localStorage.setItem("cv_analyzer_token", payload.access_token);
       window.localStorage.setItem("cv_analyzer_user", JSON.stringify(payload.user));
       await loadHistory(payload.access_token);
@@ -453,6 +458,11 @@ export default function Home() {
     setHistory([]);
     setResult(null);
     setGeneratedContent({});
+    setAuthMode("login");
+    setPassword("");
+    setVerificationCode("");
+    setVerificationEmail("");
+    setError("");
     window.localStorage.removeItem("cv_analyzer_token");
     window.localStorage.removeItem("cv_analyzer_user");
     clearWorkspaceState();
