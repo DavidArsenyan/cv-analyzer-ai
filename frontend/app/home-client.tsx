@@ -45,6 +45,11 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
 const enableLocalNlp = process.env.NEXT_PUBLIC_ENABLE_LOCAL_NLP === "true";
 const maxResumeBytes = 5 * 1024 * 1024;
 const allowedResumeExtensions = [".pdf", ".docx", ".txt"];
+const analysisProgressSteps = [
+  "Extracting resume text",
+  "Analyzing skills and job fit",
+  "Generating feedback",
+];
 
 const Icons = {
   upload: (
@@ -203,6 +208,7 @@ export default function Home() {
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent>({});
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [analysisProgressStep, setAnalysisProgressStep] = useState(0);
   const [generationLoading, setGenerationLoading] = useState<"cover" | "questions" | "rewrite" | null>(null);
   const [exportLoading, setExportLoading] = useState(false);
   const [rewriteSection, setRewriteSection] = useState("summary");
@@ -257,6 +263,20 @@ export default function Home() {
     document.documentElement.dataset.theme = theme;
     window.localStorage.setItem("cv_analyzer_theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    if (!loading) {
+      setAnalysisProgressStep(0);
+      return;
+    }
+
+    setAnalysisProgressStep(0);
+    const timer = window.setInterval(() => {
+      setAnalysisProgressStep((current) => Math.min(current + 1, analysisProgressSteps.length - 1));
+    }, 4200);
+
+    return () => window.clearInterval(timer);
+  }, [loading]);
 
   async function loadHistory(activeToken = token) {
     if (!activeToken) {
@@ -706,6 +726,27 @@ export default function Home() {
                 {loading ? Icons.loader : Icons.spark}
                 {loading ? "Analyzing..." : "Analyze CV"}
               </button>
+              <p className="analysis-speed-note">
+                {Icons.spark}
+                Results usually appear in about 5-15 seconds.
+              </p>
+              {loading ? (
+                <div className="analysis-progress" aria-live="polite">
+                  <div className="analysis-progress-track">
+                    <span style={{ width: `${((analysisProgressStep + 1) / analysisProgressSteps.length) * 100}%` }} />
+                  </div>
+                  <div className="analysis-progress-steps">
+                    {analysisProgressSteps.map((step, index) => (
+                      <span
+                        key={step}
+                        className={index < analysisProgressStep ? "done" : index === analysisProgressStep ? "active" : ""}
+                      >
+                        {step}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
 
               {error ? <p className="error">{error}</p> : null}
             </form>
@@ -768,36 +809,147 @@ export default function Home() {
 
 function EmptyState() {
   const steps = [
-    { icon: Icons.upload, title: "Upload your resume", desc: "Drop a PDF, DOCX, or TXT into the panel on the left." },
-    { icon: Icons.doc, title: "Add a job title or description", desc: "Paste the role name or vacancy text to unlock personalized job-fit scoring." },
-    { icon: Icons.spark, title: "Run the analysis", desc: "Get ATS score, skill gaps, strengths, and rewrite suggestions." },
+    {
+      title: "Upload your resume",
+      desc: "Drop PDF, DOCX, or TXT - we handle the rest",
+    },
+    {
+      title: "Add a job title",
+      desc: "Paste a role name or full vacancy to unlock job-fit score",
+    },
+    {
+      title: "Get your results in 5-15 seconds",
+      desc: "ATS score - skill gaps - cover letter - PDF export",
+    },
   ];
+  const skills = ["Customer service", "Banking", "Excel", "Communication"];
+  const gaps = ["Risk reporting", "CRM tools", "Sales targets"];
 
   return (
+    <>
     <div className="panel empty-state">
-      <div className="empty-state-header">
-        <div className="empty-logo">CV</div>
-        <h2>Ready to analyze your resume</h2>
-        <p>Upload a file on the left to get started.</p>
-      </div>
-      <div className="empty-steps">
-        {steps.map((step, i) => (
-          <div className="empty-step" key={step.title}>
-            <div className="empty-step-num">{i + 1}</div>
-            <div className="empty-step-icon">{step.icon}</div>
-            <div className="empty-step-body">
-              <strong>{step.title}</strong>
-              <p>{step.desc}</p>
+      <div className="empty-preview-grid">
+        <div className="empty-guide-card">
+          <span className="empty-eyebrow">How it works</span>
+          <h2>Land more interviews</h2>
+          <p>Get your ATS score, job-fit feedback, missing skills, and rewrite suggestions before you apply.</p>
+          <div className="empty-instructions">
+            {steps.map((step, index) => (
+              <div className="empty-instruction" key={step.title}>
+                <span className="empty-instruction-num">{index + 1}</span>
+                <div>
+                  <strong>{step.title}</strong>
+                  <p>{step.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="empty-report-card">
+          <span className="empty-eyebrow">Resume report preview</span>
+          <div className="mock-report" aria-label="Example resume analysis report">
+            <div className="mock-report-top">
+              <div>
+                <span className="mock-label">ATS Score</span>
+                <strong>87%</strong>
+              </div>
+              <div>
+                <span className="mock-label">Job Match</span>
+                <strong>74%</strong>
+              </div>
+            </div>
+
+            <div className="mock-progress" aria-hidden="true">
+              <span style={{ width: "87%" }} />
+            </div>
+
+            <div className="mock-section">
+              <div className="mock-section-title">
+                {Icons.skills}
+                Detected skills
+              </div>
+              <div className="mock-chips">
+                {skills.map((skill) => <span key={skill}>{skill}</span>)}
+              </div>
+            </div>
+
+            <div className="mock-section">
+              <div className="mock-section-title">
+                {Icons.missing}
+                Missing skills to add
+              </div>
+              <div className="mock-gaps">
+                {gaps.map((gap) => (
+                  <div key={gap}>
+                    <span />
+                    {gap}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mock-summary">
+              <strong>Improved summary</strong>
+              <p>Clearer role-focused summary with stronger keywords and measurable impact.</p>
             </div>
           </div>
-        ))}
-      </div>
-      <div className="empty-features">
-        {["ATS Score", "Job-fit match", "Skill gap analysis", "Cover letter", "Section rewriter", "PDF export"].map((f) => (
-          <span key={f} className="feature-chip">OK {f}</span>
-        ))}
+        </div>
       </div>
     </div>
+    <div className="panel empty-benefits">
+      <div>
+        <strong>Know what recruiters and ATS systems may miss.</strong>
+        <span>Use the report to improve keywords, role fit, summary clarity, and application documents.</span>
+      </div>
+      <div className="empty-benefit-tags">
+        {["ATS Score", "Job-fit match", "Skill gaps", "PDF export"].map((f) => (
+          <span key={f}>{f}</span>
+        ))}
+        <span>Private by design</span>
+        <span>No data sold</span>
+        <span>PDF, DOCX, TXT supported</span>
+      </div>
+    </div>
+    <div className="panel empty-faq-panel" aria-label="Resume analyzer details">
+      <div>
+        <strong>Is my resume data safe?</strong>
+        <span>Uploaded files are not kept after parsing.</span>
+      </div>
+      <div>
+        <strong>Which file formats work?</strong>
+        <span>PDF, DOCX, TXT</span>
+      </div>
+      <div>
+        <strong>How long does it take?</strong>
+        <span>About 5-15 seconds</span>
+      </div>
+      <div>
+        <strong>Do I need a job description?</strong>
+        <span>No, a job title is enough.</span>
+      </div>
+      <div>
+        <strong>Can I use it for non-tech jobs?</strong>
+        <span>Yes, it works across industries.</span>
+      </div>
+      <div>
+        <strong>Do I need an account?</strong>
+        <span>No, guests can run a limited analysis.</span>
+      </div>
+      <div>
+        <strong>Can I export the report?</strong>
+        <span>Yes, registered users can export PDF.</span>
+      </div>
+      <div>
+        <strong>Does it guarantee interviews?</strong>
+        <span>No, it gives improvement guidance.</span>
+      </div>
+      <div>
+        <strong>Can I analyze DOCX resumes?</strong>
+        <span>Yes, DOCX is supported.</span>
+      </div>
+    </div>
+    </>
   );
 }
 
