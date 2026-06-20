@@ -20,51 +20,92 @@ SMTP_USE_TLS = os.getenv("SMTP_USE_TLS", "true").lower() == "true"
 EMAIL_TIMEOUT_SECONDS = int(os.getenv("EMAIL_TIMEOUT_SECONDS", "15"))
 
 
-def _verification_text(code: str) -> str:
+def _code_text(code: str, *, action: str, ignore_text: str) -> str:
     return "\n".join(
         [
-            "Your CV Analyzer AI verification code is:",
+            f"Your CV Analyzer AI {action} code is:",
             "",
             code,
             "",
             "This code expires in 15 minutes.",
-            "If you did not request this account, you can ignore this email.",
+            ignore_text,
         ]
     )
 
 
-def _verification_html(code: str) -> str:
+def _code_html(code: str, *, title: str, body: str, ignore_text: str) -> str:
     return f"""
     <div style="font-family: Arial, sans-serif; color: #111827; line-height: 1.5;">
-      <h2>Your CV Analyzer AI verification code</h2>
-      <p>Use this code to verify your email address:</p>
+      <h2>{title}</h2>
+      <p>{body}</p>
       <p style="font-size: 28px; font-weight: 700; letter-spacing: 4px;">{code}</p>
       <p>This code expires in 15 minutes.</p>
-      <p style="color: #6b7280;">If you did not request this account, you can ignore this email.</p>
+      <p style="color: #6b7280;">{ignore_text}</p>
     </div>
     """.strip()
 
 
 def send_verification_email(recipient_email: str, code: str) -> None:
+    _send_code_email(
+        recipient_email=recipient_email,
+        code=code,
+        subject="Your CV Analyzer AI verification code",
+        action="verification",
+        title="Your CV Analyzer AI verification code",
+        body="Use this code to verify your email address:",
+        ignore_text="If you did not request this account, you can ignore this email.",
+    )
+
+
+def send_password_reset_email(recipient_email: str, code: str) -> None:
+    _send_code_email(
+        recipient_email=recipient_email,
+        code=code,
+        subject="Your CV Analyzer AI password reset code",
+        action="password reset",
+        title="Your CV Analyzer AI password reset code",
+        body="Use this code to reset your password:",
+        ignore_text="If you did not request a password reset, you can ignore this email.",
+    )
+
+
+def _send_code_email(
+    *,
+    recipient_email: str,
+    code: str,
+    subject: str,
+    action: str,
+    title: str,
+    body: str,
+    ignore_text: str,
+) -> None:
     if EMAIL_PROVIDER == "resend":
-        _send_with_resend_api(recipient_email, code)
+        _send_with_resend_api(
+            recipient_email=recipient_email,
+            code=code,
+            subject=subject,
+            action=action,
+            title=title,
+            body=body,
+            ignore_text=ignore_text,
+        )
         return
 
     if not SMTP_HOST:
         if ENV == "production":
             raise RuntimeError("SMTP_HOST must be set when ENV=production.")
-        print(f"[dev] Email verification code for {recipient_email}: {code}")
+        print(f"[dev] Email {action} code for {recipient_email}: {code}")
         return
 
     if not SMTP_FROM_EMAIL:
         raise RuntimeError("SMTP_FROM_EMAIL or SMTP_USERNAME must be set.")
 
     message = EmailMessage()
-    message["Subject"] = "Your CV Analyzer AI verification code"
+    message["Subject"] = subject
     message["From"] = f"{SMTP_FROM_NAME} <{SMTP_FROM_EMAIL}>"
     message["To"] = recipient_email
-    message.set_content(_verification_text(code))
-    message.add_alternative(_verification_html(code), subtype="html")
+    message.set_content(_code_text(code, action=action, ignore_text=ignore_text))
+    message.add_alternative(_code_html(code, title=title, body=body, ignore_text=ignore_text), subtype="html")
 
     if SMTP_PORT == 465:
         smtp_client = smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=EMAIL_TIMEOUT_SECONDS)
@@ -81,7 +122,16 @@ def send_verification_email(recipient_email: str, code: str) -> None:
         smtp.send_message(message)
 
 
-def _send_with_resend_api(recipient_email: str, code: str) -> None:
+def _send_with_resend_api(
+    *,
+    recipient_email: str,
+    code: str,
+    subject: str,
+    action: str,
+    title: str,
+    body: str,
+    ignore_text: str,
+) -> None:
     api_key = RESEND_API_KEY or SMTP_PASSWORD
     if not api_key:
         raise RuntimeError("RESEND_API_KEY must be set when EMAIL_PROVIDER=resend.")
@@ -91,9 +141,9 @@ def _send_with_resend_api(recipient_email: str, code: str) -> None:
     payload = {
         "from": f"{SMTP_FROM_NAME} <{SMTP_FROM_EMAIL}>",
         "to": [recipient_email],
-        "subject": "Your CV Analyzer AI verification code",
-        "text": _verification_text(code),
-        "html": _verification_html(code),
+        "subject": subject,
+        "text": _code_text(code, action=action, ignore_text=ignore_text),
+        "html": _code_html(code, title=title, body=body, ignore_text=ignore_text),
     }
     request = urllib.request.Request(
         "https://api.resend.com/emails",

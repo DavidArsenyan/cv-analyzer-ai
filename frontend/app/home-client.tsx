@@ -40,6 +40,7 @@ type HistoryItem = {
 
 type AuthUser = { id: number; email: string; is_email_verified: boolean };
 type ActiveTab = "analysis" | "tools" | "documents" | "history";
+type AuthMode = "login" | "register" | "verify" | "forgot" | "reset";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
 const enableLocalNlp = process.env.NEXT_PUBLIC_ENABLE_LOCAL_NLP === "true";
@@ -213,7 +214,7 @@ export default function Home() {
   const [exportLoading, setExportLoading] = useState(false);
   const [rewriteSection, setRewriteSection] = useState("summary");
   const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [authMode, setAuthMode] = useState<"login" | "register" | "verify">("login");
+  const [authMode, setAuthMode] = useState<AuthMode>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
@@ -311,6 +312,14 @@ export default function Home() {
       await verifyEmailCode();
       return;
     }
+    if (authMode === "forgot") {
+      await requestPasswordReset();
+      return;
+    }
+    if (authMode === "reset") {
+      await resetPassword();
+      return;
+    }
 
     const endpoint = authMode === "login" ? "/api/auth/login" : "/api/auth/register";
     const options = authMode === "login"
@@ -385,6 +394,56 @@ export default function Home() {
       setVerificationCode("");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not resend verification code.");
+    }
+  }
+
+  async function requestPasswordReset() {
+    const activeEmail = email.trim();
+    if (!activeEmail) {
+      setError("Enter your email address first.");
+      return;
+    }
+    try {
+      const res = await fetch(`${apiUrl}/api/auth/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: activeEmail }),
+      });
+      if (!res.ok) {
+        throw new Error(await readApiError(res, "Could not send password reset code."));
+      }
+      setVerificationEmail(activeEmail);
+      setVerificationCode("");
+      setPassword("");
+      setAuthMode("reset");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not send password reset code.");
+    }
+  }
+
+  async function resetPassword() {
+    const activeEmail = verificationEmail || email;
+    try {
+      const res = await fetch(`${apiUrl}/api/auth/reset-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: activeEmail, code: verificationCode, password }),
+      });
+      if (!res.ok) {
+        throw new Error(await readApiError(res, "Password reset failed."));
+      }
+      const payload = await res.json();
+      setToken(payload.access_token);
+      setUser(payload.user);
+      setVerificationCode("");
+      setVerificationEmail("");
+      setEmail("");
+      setPassword("");
+      window.localStorage.setItem("cv_analyzer_token", payload.access_token);
+      window.localStorage.setItem("cv_analyzer_user", JSON.stringify(payload.user));
+      await loadHistory(payload.access_token);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Password reset failed.");
     }
   }
 
@@ -615,10 +674,12 @@ export default function Home() {
             <div className="auth-callout">
               <p className="auth-callout-label">Sign in to save analyses</p>
               <form className="auth-form-inner" onSubmit={handleAuth}>
-                <div className="auth-tabs">
-                  <button type="button" className={authMode === "login" ? "active" : ""} onClick={() => setAuthMode("login")}>Login</button>
-                  <button type="button" className={authMode === "register" ? "active" : ""} onClick={() => setAuthMode("register")}>Register</button>
-                </div>
+                {authMode === "login" || authMode === "register" ? (
+                  <div className="auth-tabs">
+                    <button type="button" className={authMode === "login" ? "active" : ""} onClick={() => setAuthMode("login")}>Login</button>
+                    <button type="button" className={authMode === "register" ? "active" : ""} onClick={() => setAuthMode("register")}>Register</button>
+                  </div>
+                ) : null}
                 {authMode === "verify" ? (
                   <>
                     <input
@@ -645,6 +706,48 @@ export default function Home() {
                     <button type="button" className="auth-link-btn" onClick={resendVerificationCode}>
                       Resend code
                     </button>
+                    <button type="button" className="auth-link-btn" onClick={() => setAuthMode("login")}>
+                      Back to login
+                    </button>
+                  </>
+                ) : authMode === "forgot" ? (
+                  <>
+                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email address" required />
+                    <button type="submit">Send reset code</button>
+                    <button type="button" className="auth-link-btn" onClick={() => setAuthMode("login")}>
+                      Back to login
+                    </button>
+                  </>
+                ) : authMode === "reset" ? (
+                  <>
+                    <input
+                      type="email"
+                      value={verificationEmail || email}
+                      onChange={(e) => {
+                        setVerificationEmail(e.target.value);
+                        setEmail(e.target.value);
+                      }}
+                      placeholder="Email address"
+                      required
+                    />
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]{6}"
+                      maxLength={6}
+                      value={verificationCode}
+                      onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                      placeholder="6-digit reset code"
+                      required
+                    />
+                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="New password" minLength={8} required />
+                    <button type="submit">Reset password</button>
+                    <button type="button" className="auth-link-btn" onClick={requestPasswordReset}>
+                      Resend reset code
+                    </button>
+                    <button type="button" className="auth-link-btn" onClick={() => setAuthMode("login")}>
+                      Back to login
+                    </button>
                   </>
                 ) : (
                   <>
@@ -652,8 +755,8 @@ export default function Home() {
                     <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" minLength={8} required />
                     <button type="submit">{authMode === "login" ? "Sign in" : "Create account"}</button>
                     {authMode === "login" ? (
-                      <button type="button" className="auth-link-btn" onClick={resendVerificationCode}>
-                        Verify email
+                      <button type="button" className="auth-link-btn" onClick={() => setAuthMode("forgot")}>
+                        Forgot password?
                       </button>
                     ) : null}
                   </>

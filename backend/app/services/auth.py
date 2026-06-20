@@ -10,7 +10,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -34,6 +34,8 @@ JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "1440"))
 EMAIL_VERIFICATION_EXPIRE_MINUTES = int(os.getenv("EMAIL_VERIFICATION_EXPIRE_MINUTES", "15"))
 EMAIL_VERIFICATION_MAX_ATTEMPTS = int(os.getenv("EMAIL_VERIFICATION_MAX_ATTEMPTS", "5"))
+PASSWORD_RESET_EXPIRE_MINUTES = int(os.getenv("PASSWORD_RESET_EXPIRE_MINUTES", "15"))
+PASSWORD_RESET_MAX_ATTEMPTS = int(os.getenv("PASSWORD_RESET_MAX_ATTEMPTS", "5"))
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
@@ -84,6 +86,26 @@ def create_email_verification_code(db: Session, user: User) -> str:
     return code
 
 
+def delete_user(db: Session, user: User) -> None:
+    db.delete(user)
+    db.commit()
+
+
+def cleanup_expired_unverified_users(db: Session) -> None:
+    now = _utcnow_naive()
+    statement = delete(User).where(
+        User.is_email_verified.is_(False),
+        User.email_verification_expires_at.is_not(None),
+        User.email_verification_expires_at < now,
+    )
+    db.execute(statement)
+    db.commit()
+
+
+def is_email_verification_expired(user: User) -> bool:
+    return bool(user.email_verification_expires_at and _utcnow_naive() > user.email_verification_expires_at)
+
+
 def verify_email_code(db: Session, user: User, code: str) -> bool:
     if user.is_email_verified:
         return True
@@ -105,6 +127,44 @@ def verify_email_code(db: Session, user: User, code: str) -> bool:
     user.email_verification_expires_at = None
     user.email_verification_attempts = 0
     user.email_verification_sent_at = None
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return True
+
+
+def create_password_reset_code(db: Session, user: User) -> str:
+    code = f"{secrets.randbelow(1_000_000):06d}"
+    user.password_reset_code_hash = hash_password(code)
+    now = _utcnow_naive()
+    user.password_reset_expires_at = now + timedelta(minutes=PASSWORD_RESET_EXPIRE_MINUTES)
+    user.password_reset_attempts = 0
+    user.password_reset_sent_at = now
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return code
+
+
+def reset_password_with_code(db: Session, user: User, code: str, password: str) -> bool:
+    if not user.password_reset_code_hash or not user.password_reset_expires_at:
+        return False
+    if user.password_reset_attempts >= PASSWORD_RESET_MAX_ATTEMPTS:
+        return False
+    if _utcnow_naive() > user.password_reset_expires_at:
+        return False
+
+    user.password_reset_attempts += 1
+    if not verify_password(code, user.password_reset_code_hash):
+        db.add(user)
+        db.commit()
+        return False
+
+    user.hashed_password = hash_password(password)
+    user.password_reset_code_hash = None
+    user.password_reset_expires_at = None
+    user.password_reset_attempts = 0
+    user.password_reset_sent_at = None
     db.add(user)
     db.commit()
     db.refresh(user)

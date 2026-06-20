@@ -56,8 +56,7 @@ class AnalysisHistoryItem(BaseModel):
     detected_skills: list[str]
 
 
-class UserCreate(BaseModel):
-    email: EmailStr
+class PasswordMixin(BaseModel):
     password: str = Field(min_length=8, max_length=128)
 
     @field_validator("password")
@@ -68,6 +67,10 @@ class UserCreate(BaseModel):
         if not has_letter or not has_digit:
             raise ValueError("Password must contain at least one letter and one number.")
         return value
+
+
+class UserCreate(PasswordMixin):
+    email: EmailStr
 
 
 class UserResponse(BaseModel):
@@ -105,3 +108,19 @@ class EmailVerificationRequest(BaseModel):
 
 class ResendVerificationRequest(BaseModel):
     email: EmailStr
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordRequest(PasswordMixin):
+    email: EmailStr
+    code: str = Field(min_length=6, max_length=6)
+
+    @field_validator("code")
+    @classmethod
+    def validate_code(cls, value: str) -> str:
+        if not value.isdigit():
+            raise ValueError("Reset code must contain digits only.")
+        return value

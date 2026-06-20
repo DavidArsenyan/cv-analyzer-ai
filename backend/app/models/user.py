@@ -23,4 +23,8 @@ class User(Base):
     email_verification_expires_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     email_verification_attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     email_verification_sent_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    password_reset_code_hash: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    password_reset_expires_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    password_reset_attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    password_reset_sent_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow_naive, nullable=False)
