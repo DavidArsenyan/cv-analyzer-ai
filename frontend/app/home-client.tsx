@@ -1166,27 +1166,11 @@ function Dashboard({
           <span className="section-title-icon">{Icons.missing}</span>
           Missing Skills
         </h2>
-        <div className="insight-list">
+        <ul>
           {result.missing_skills.length
-            ? result.missing_skills.map((g) => (
-              <div className="insight-item insight-warning" key={g.skill}>
-                <span className="insight-dot" />
-                <div>
-                  <strong>{g.skill}</strong>
-                  <p>{g.reason}</p>
-                </div>
-              </div>
-            ))
-            : (
-              <div className="insight-item">
-                <span className="insight-dot insight-dot-success" />
-                <div>
-                  <strong>No role-specific skill gaps detected.</strong>
-                  <p>Your resume already covers the main skills found for this role.</p>
-                </div>
-              </div>
-            )}
-        </div>
+            ? result.missing_skills.map((g) => <li key={g.skill}><strong>{g.skill}</strong> - {g.reason}</li>)
+            : <li>No role-specific skill gaps detected.</li>}
+        </ul>
       </section>
 
       <section className="panel section-panel two-columns">
@@ -1195,28 +1179,14 @@ function Dashboard({
             <span className="section-title-icon">{Icons.strong}</span>
             Strengths
           </h2>
-          <div className="insight-list">
-            {result.strengths.map((item) => (
-              <div className="insight-item insight-success" key={item}>
-                <span className="insight-dot insight-dot-success" />
-                <p>{item}</p>
-              </div>
-            ))}
-          </div>
+          <ul className="strengths-list">{result.strengths.map((item) => <li key={item}>{item}</li>)}</ul>
         </div>
         <div>
           <h2 className="section-title">
             <span className="section-title-icon section-title-icon-danger">{Icons.missing}</span>
             Weaknesses
           </h2>
-          <div className="insight-list">
-            {result.weaknesses.map((item) => (
-              <div className="insight-item insight-danger" key={item}>
-                <span className="insight-dot insight-dot-danger" />
-                <p>{item}</p>
-              </div>
-            ))}
-          </div>
+          <ul className="weaknesses-list">{result.weaknesses.map((item) => <li key={item}>{item}</li>)}</ul>
         </div>
       </section>
 
@@ -1225,14 +1195,7 @@ function Dashboard({
           <span className="section-title-icon">{Icons.recs}</span>
           Recommendations
         </h2>
-        <div className="insight-list">
-          {result.recommendations.map((item) => (
-            <div className="insight-item" key={item}>
-              <span className="insight-dot insight-dot-accent" />
-              <p>{item}</p>
-            </div>
-          ))}
-        </div>
+        <ul>{result.recommendations.map((item) => <li key={item}>{item}</li>)}</ul>
       </section>
 
       <section className="panel section-panel">
@@ -1240,10 +1203,7 @@ function Dashboard({
           <span className="section-title-icon">{Icons.summary}</span>
           Improved Summary
         </h2>
-        <div className="summary-card">
-          <strong>Suggested rewrite</strong>
-          <p className="summary">{result.improved_summary}</p>
-        </div>
+        <p className="summary">{result.improved_summary}</p>
       </section>
     </>
   );
