@@ -1902,7 +1902,7 @@ button:disabled {
   font-weight: 600;
   color: var(--text1);
   transition: border-color var(--transition), background var(--transition), color var(--transition), transform var(--transition);
-  animation: mockChipIn 0.45s ease both;
+  animation: analysisChipReveal 0.45s ease both;
 }
 
 .chips span:nth-child(1) { animation-delay: 0.10s; }
@@ -1944,7 +1944,7 @@ li strong { color: var(--text1); font-weight: 700; }
 
 /* ── Summary ── */
 .section-panel ul li {
-  animation: mockLineIn 0.45s ease both;
+  animation: analysisLineReveal 0.45s ease both;
 }
 
 .section-panel ul li:nth-child(1) { animation-delay: 0.10s; }
@@ -1953,6 +1953,28 @@ li strong { color: var(--text1); font-weight: 700; }
 .section-panel ul li:nth-child(4) { animation-delay: 0.55s; }
 .section-panel ul li:nth-child(5) { animation-delay: 0.70s; }
 .section-panel ul li:nth-child(6) { animation-delay: 0.85s; }
+
+@keyframes analysisChipReveal {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes analysisLineReveal {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 .summary {
   font-size: 14px;
