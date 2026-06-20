@@ -1166,7 +1166,7 @@ function Dashboard({
           <span className="section-title-icon">{Icons.missing}</span>
           Missing Skills
         </h2>
-        <ul>
+        <ul className="analysis-list analysis-list-missing">
           {result.missing_skills.length
             ? result.missing_skills.map((g) => <li key={g.skill}><strong>{g.skill}</strong> - {g.reason}</li>)
             : <li>No role-specific skill gaps detected.</li>}
@@ -1179,14 +1179,14 @@ function Dashboard({
             <span className="section-title-icon">{Icons.strong}</span>
             Strengths
           </h2>
-          <ul className="strengths-list">{result.strengths.map((item) => <li key={item}>{item}</li>)}</ul>
+          <ul className="analysis-list analysis-list-strengths strengths-list">{result.strengths.map((item) => <li key={item}>{item}</li>)}</ul>
         </div>
         <div>
           <h2 className="section-title">
             <span className="section-title-icon section-title-icon-danger">{Icons.missing}</span>
             Weaknesses
           </h2>
-          <ul className="weaknesses-list">{result.weaknesses.map((item) => <li key={item}>{item}</li>)}</ul>
+          <ul className="analysis-list analysis-list-weaknesses weaknesses-list">{result.weaknesses.map((item) => <li key={item}>{item}</li>)}</ul>
         </div>
       </section>
 
@@ -1195,7 +1195,7 @@ function Dashboard({
           <span className="section-title-icon">{Icons.recs}</span>
           Recommendations
         </h2>
-        <ul>{result.recommendations.map((item) => <li key={item}>{item}</li>)}</ul>
+        <ul className="analysis-list analysis-list-recommendations">{result.recommendations.map((item) => <li key={item}>{item}</li>)}</ul>
       </section>
 
       <section className="panel section-panel">

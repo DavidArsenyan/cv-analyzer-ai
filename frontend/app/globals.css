@@ -1902,17 +1902,7 @@ button:disabled {
   font-weight: 600;
   color: var(--text1);
   transition: border-color var(--transition), background var(--transition), color var(--transition), transform var(--transition);
-  animation: analysisChipCycle 5.4s ease-in-out infinite;
 }
-
-.chips span:nth-child(1) { animation-delay: 0.10s; }
-.chips span:nth-child(2) { animation-delay: 0.25s; }
-.chips span:nth-child(3) { animation-delay: 0.40s; }
-.chips span:nth-child(4) { animation-delay: 0.55s; }
-.chips span:nth-child(5) { animation-delay: 0.70s; }
-.chips span:nth-child(6) { animation-delay: 0.85s; }
-.chips span:nth-child(7) { animation-delay: 1.00s; }
-.chips span:nth-child(8) { animation-delay: 1.15s; }
 
 .chips span:hover {
   border-color: var(--accent-mid);
@@ -1943,40 +1933,50 @@ li strong { color: var(--text1); font-weight: 700; }
 .weaknesses-list li::marker { color: var(--danger); }
 
 /* ── Summary ── */
-.section-panel ul li {
-  animation: analysisLineCycle 5.4s ease-in-out infinite;
-}
-
-.section-panel ul li:nth-child(1) { animation-delay: 0.10s; }
-.section-panel ul li:nth-child(2) { animation-delay: 0.25s; }
-.section-panel ul li:nth-child(3) { animation-delay: 0.40s; }
-.section-panel ul li:nth-child(4) { animation-delay: 0.55s; }
-.section-panel ul li:nth-child(5) { animation-delay: 0.70s; }
-.section-panel ul li:nth-child(6) { animation-delay: 0.85s; }
-
-@keyframes analysisChipCycle {
-  0%, 68%, 100% {
-    transform: translateY(0);
-    box-shadow: none;
-  }
-  12%, 26% {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.07);
-  }
+.analysis-list li {
+  animation: analysisLineCycle 8.8s ease-in-out infinite;
 }
 
 @keyframes analysisLineCycle {
-  0%, 68%, 100% {
+  0%, 78%, 100% {
     color: var(--text2);
     transform: translateY(0);
     text-shadow: none;
   }
-  12%, 26% {
+  8%, 18% {
     color: var(--text1);
     transform: translateY(-1px);
     text-shadow: 0 0 10px rgba(148, 163, 184, 0.20);
   }
 }
+
+.analysis-list-missing li:nth-child(1) { animation-delay: 0.0s; }
+.analysis-list-missing li:nth-child(2) { animation-delay: 0.35s; }
+.analysis-list-missing li:nth-child(3) { animation-delay: 0.70s; }
+.analysis-list-missing li:nth-child(4) { animation-delay: 1.05s; }
+.analysis-list-missing li:nth-child(5) { animation-delay: 1.40s; }
+.analysis-list-missing li:nth-child(6) { animation-delay: 1.75s; }
+
+.analysis-list-strengths li:nth-child(1) { animation-delay: 2.2s; }
+.analysis-list-strengths li:nth-child(2) { animation-delay: 2.55s; }
+.analysis-list-strengths li:nth-child(3) { animation-delay: 2.90s; }
+.analysis-list-strengths li:nth-child(4) { animation-delay: 3.25s; }
+.analysis-list-strengths li:nth-child(5) { animation-delay: 3.60s; }
+.analysis-list-strengths li:nth-child(6) { animation-delay: 3.95s; }
+
+.analysis-list-weaknesses li:nth-child(1) { animation-delay: 4.4s; }
+.analysis-list-weaknesses li:nth-child(2) { animation-delay: 4.75s; }
+.analysis-list-weaknesses li:nth-child(3) { animation-delay: 5.10s; }
+.analysis-list-weaknesses li:nth-child(4) { animation-delay: 5.45s; }
+.analysis-list-weaknesses li:nth-child(5) { animation-delay: 5.80s; }
+.analysis-list-weaknesses li:nth-child(6) { animation-delay: 6.15s; }
+
+.analysis-list-recommendations li:nth-child(1) { animation-delay: 6.6s; }
+.analysis-list-recommendations li:nth-child(2) { animation-delay: 6.95s; }
+.analysis-list-recommendations li:nth-child(3) { animation-delay: 7.30s; }
+.analysis-list-recommendations li:nth-child(4) { animation-delay: 7.65s; }
+.analysis-list-recommendations li:nth-child(5) { animation-delay: 8.00s; }
+.analysis-list-recommendations li:nth-child(6) { animation-delay: 8.35s; }
 
 .summary {
   font-size: 14px;
