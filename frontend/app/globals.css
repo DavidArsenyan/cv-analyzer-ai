@@ -1934,7 +1934,7 @@ li strong { color: var(--text1); font-weight: 700; }
 
 /* ── Summary ── */
 .analysis-list li {
-  animation: analysisLineCycle 8.8s ease-in-out infinite;
+  animation: analysisLineCycle 6.8s ease-in-out infinite;
 }
 
 @keyframes analysisLineCycle {
@@ -1951,32 +1951,32 @@ li strong { color: var(--text1); font-weight: 700; }
 }
 
 .analysis-list-missing li:nth-child(1) { animation-delay: 0.0s; }
-.analysis-list-missing li:nth-child(2) { animation-delay: 0.35s; }
-.analysis-list-missing li:nth-child(3) { animation-delay: 0.70s; }
-.analysis-list-missing li:nth-child(4) { animation-delay: 1.05s; }
-.analysis-list-missing li:nth-child(5) { animation-delay: 1.40s; }
-.analysis-list-missing li:nth-child(6) { animation-delay: 1.75s; }
+.analysis-list-missing li:nth-child(2) { animation-delay: 0.25s; }
+.analysis-list-missing li:nth-child(3) { animation-delay: 0.50s; }
+.analysis-list-missing li:nth-child(4) { animation-delay: 0.75s; }
+.analysis-list-missing li:nth-child(5) { animation-delay: 1.00s; }
+.analysis-list-missing li:nth-child(6) { animation-delay: 1.25s; }
 
-.analysis-list-strengths li:nth-child(1) { animation-delay: 2.2s; }
-.analysis-list-strengths li:nth-child(2) { animation-delay: 2.55s; }
-.analysis-list-strengths li:nth-child(3) { animation-delay: 2.90s; }
-.analysis-list-strengths li:nth-child(4) { animation-delay: 3.25s; }
-.analysis-list-strengths li:nth-child(5) { animation-delay: 3.60s; }
-.analysis-list-strengths li:nth-child(6) { animation-delay: 3.95s; }
+.analysis-list-strengths li:nth-child(1) { animation-delay: 1.7s; }
+.analysis-list-strengths li:nth-child(2) { animation-delay: 1.95s; }
+.analysis-list-strengths li:nth-child(3) { animation-delay: 2.20s; }
+.analysis-list-strengths li:nth-child(4) { animation-delay: 2.45s; }
+.analysis-list-strengths li:nth-child(5) { animation-delay: 2.70s; }
+.analysis-list-strengths li:nth-child(6) { animation-delay: 2.95s; }
 
-.analysis-list-weaknesses li:nth-child(1) { animation-delay: 4.4s; }
-.analysis-list-weaknesses li:nth-child(2) { animation-delay: 4.75s; }
-.analysis-list-weaknesses li:nth-child(3) { animation-delay: 5.10s; }
-.analysis-list-weaknesses li:nth-child(4) { animation-delay: 5.45s; }
-.analysis-list-weaknesses li:nth-child(5) { animation-delay: 5.80s; }
-.analysis-list-weaknesses li:nth-child(6) { animation-delay: 6.15s; }
+.analysis-list-weaknesses li:nth-child(1) { animation-delay: 3.4s; }
+.analysis-list-weaknesses li:nth-child(2) { animation-delay: 3.65s; }
+.analysis-list-weaknesses li:nth-child(3) { animation-delay: 3.90s; }
+.analysis-list-weaknesses li:nth-child(4) { animation-delay: 4.15s; }
+.analysis-list-weaknesses li:nth-child(5) { animation-delay: 4.40s; }
+.analysis-list-weaknesses li:nth-child(6) { animation-delay: 4.65s; }
 
-.analysis-list-recommendations li:nth-child(1) { animation-delay: 6.6s; }
-.analysis-list-recommendations li:nth-child(2) { animation-delay: 6.95s; }
-.analysis-list-recommendations li:nth-child(3) { animation-delay: 7.30s; }
-.analysis-list-recommendations li:nth-child(4) { animation-delay: 7.65s; }
-.analysis-list-recommendations li:nth-child(5) { animation-delay: 8.00s; }
-.analysis-list-recommendations li:nth-child(6) { animation-delay: 8.35s; }
+.analysis-list-recommendations li:nth-child(1) { animation-delay: 5.1s; }
+.analysis-list-recommendations li:nth-child(2) { animation-delay: 5.35s; }
+.analysis-list-recommendations li:nth-child(3) { animation-delay: 5.60s; }
+.analysis-list-recommendations li:nth-child(4) { animation-delay: 5.85s; }
+.analysis-list-recommendations li:nth-child(5) { animation-delay: 6.10s; }
+.analysis-list-recommendations li:nth-child(6) { animation-delay: 6.35s; }
 
 .summary {
   font-size: 14px;
