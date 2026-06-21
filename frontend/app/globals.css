@@ -1192,24 +1192,57 @@ button, input, select, textarea { font: inherit; }
 
 /* ── Auth callout ── */
 .auth-callout {
-  margin: 0 20px 20px;
+  margin: 0 20px 14px;
   background: var(--surface2);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
 }
 
+.auth-callout-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 12px;
+}
+
 .auth-callout-label {
-  padding: 12px 14px 10px;
+  margin: 0;
   font-size: 11px;
   font-weight: 700;
   color: var(--text2);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  border-bottom: 1px solid var(--border);
+}
+
+.auth-callout-summary span {
+  display: block;
+  margin-top: 3px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--text3);
+}
+
+.auth-toggle-btn {
+  flex: 0 0 auto;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text1);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.auth-toggle-btn:hover {
+  background: var(--surface3);
+  transform: none;
 }
 
 .auth-form-inner {
+  border-top: 1px solid var(--border);
   padding: 12px 14px 14px;
   display: grid;
   gap: 10px;
@@ -1260,6 +1293,27 @@ button, input, select, textarea { font: inherit; }
 
 /* ── Form ── */
 .form { display: grid; gap: 16px; }
+
+.guest-start-note {
+  display: grid;
+  gap: 3px;
+  padding: 11px 12px;
+  border: 1px solid rgba(13, 122, 95, 0.20);
+  border-radius: var(--radius-sm);
+  background: var(--accent-light);
+}
+
+.guest-start-note strong {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.guest-start-note span {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text2);
+}
 
 .field { display: grid; gap: 7px; }
 
@@ -2746,6 +2800,38 @@ li strong { color: var(--text1); font-weight: 700; }
   }
 
   .input-panel { position: static; }
+
+  .auth-callout {
+    margin: 0 14px 12px;
+  }
+
+  .auth-callout-summary {
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .auth-callout-summary span {
+    font-size: 11px;
+  }
+
+  .auth-toggle-btn {
+    min-height: 32px;
+    padding: 0 10px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .auth-form-inner {
+    padding: 10px;
+  }
+
+  .guest-start-note {
+    padding: 10px;
+  }
+
+  .guest-start-note span {
+    font-size: 11px;
+  }
 
   .tabs-nav { flex-wrap: wrap; }
   .tab-btn { flex: 1 1 calc(50% - 4px); }

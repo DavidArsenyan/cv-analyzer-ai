@@ -215,6 +215,7 @@ export default function Home() {
   const [rewriteSection, setRewriteSection] = useState("summary");
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [authMode, setAuthMode] = useState<AuthMode>("login");
+  const [authExpanded, setAuthExpanded] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
@@ -459,6 +460,7 @@ export default function Home() {
     setResult(null);
     setGeneratedContent({});
     setAuthMode("login");
+    setAuthExpanded(false);
     setPassword("");
     setVerificationCode("");
     setVerificationEmail("");
@@ -633,6 +635,7 @@ export default function Home() {
     { id: "documents", label: "Documents", icon: Icons.doc, disabled: !result },
     { id: "history", label: "History", icon: Icons.history },
   ];
+  const authFormVisible = authExpanded || authMode === "verify" || authMode === "forgot" || authMode === "reset";
 
   return (
     <main className="shell">
@@ -681,8 +684,24 @@ export default function Home() {
           </div>
 
           {!user && (
-            <div className="auth-callout">
-              <p className="auth-callout-label">Sign in to save analyses</p>
+            <div className={`auth-callout${authFormVisible ? " expanded" : ""}`}>
+              <div className="auth-callout-summary">
+                <div>
+                  <p className="auth-callout-label">Sign in for extra AI tools</p>
+                  <span>Optional. Try the analyzer as a guest first.</span>
+                </div>
+                <button
+                  type="button"
+                  className="auth-toggle-btn"
+                  onClick={() => {
+                    setAuthMode("login");
+                    setAuthExpanded(!authFormVisible);
+                  }}
+                >
+                  {authFormVisible ? "Hide" : "Login / Register"}
+                </button>
+              </div>
+              {authFormVisible ? (
               <form className="auth-form-inner" onSubmit={handleAuth}>
                 {authMode === "login" || authMode === "register" ? (
                   <div className="auth-tabs">
@@ -772,11 +791,18 @@ export default function Home() {
                   </>
                 )}
               </form>
+              ) : null}
             </div>
           )}
 
           <div className="panel-body">
             <form onSubmit={handleSubmit} className="form">
+              {!user ? (
+                <div className="guest-start-note">
+                  <strong>No registration required</strong>
+                  <span>Run 2 free guest analyses today. Sign in only if you want saved history and extra tools.</span>
+                </div>
+              ) : null}
               <div className="field">
                 <span className="field-label">Resume file</span>
                 {resume ? (

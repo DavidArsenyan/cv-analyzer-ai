@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { SeoPage } from "../seo-page";
 
 export const metadata: Metadata = {
-  title: "ATS Resume Checker",
-  description: "Check your resume for ATS-friendly structure, relevant skills, missing keywords, and practical improvements.",
+  title: {
+    absolute: "Free AI ATS Resume Checker | Optimize for ATS Systems",
+  },
+  description: "Check if your resume is ATS-friendly. Scan your CV for missing keywords, format issues, and optimize it to pass automated recruiter filters instantly.",
   alternates: { canonical: "/ats-resume-checker" },
 };
 
@@ -40,4 +42,3 @@ export default function AtsResumeCheckerPage() {
     </SeoPage>
   );
 }
-
