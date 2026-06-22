@@ -687,7 +687,7 @@ export default function Home() {
             <div className={`auth-callout${authFormVisible ? " expanded" : ""}`}>
               <div className="auth-callout-summary">
                 <div>
-                  <p className="auth-callout-label">Sign in for extra AI tools</p>
+                  <p className="auth-callout-label">Unlock all AI tools</p>
                   <span>Optional. Try the analyzer as a guest first.</span>
                 </div>
                 <button
@@ -800,7 +800,7 @@ export default function Home() {
               {!user ? (
                 <div className="guest-start-note">
                   <strong>No registration required</strong>
-                  <span>Run 2 free guest analyses today. Sign in only if you want saved history and extra tools.</span>
+                  <span>Run 2 free guest analyses today. Sign in only if you want saved history and access to extra tools.</span>
                 </div>
               ) : null}
               <div className="field">
@@ -858,6 +858,9 @@ export default function Home() {
                 />
                 <span className={`char-counter${jobDescription.length > 4000 ? " over" : ""}`}>
                   {jobDescription.length} / 4000
+                </span>
+                <span className="field-note">
+                  Free resume match score tool with no signup. Analyze your alignment with the job description instantly as a guest.
                 </span>
               </div>
 
@@ -950,14 +953,14 @@ function EmptyState() {
   const steps = [
     {
       title: "Upload your resume",
-      desc: "Drop PDF, DOCX, or TXT - we handle the rest",
+      desc: "PDF, DOCX, or TXT",
     },
     {
-      title: "Add a job title",
-      desc: "Paste a role name or full vacancy to unlock job-fit score",
+      title: "Paste the target job description",
+      desc: "A full vacancy gives the clearest match score",
     },
     {
-      title: "Get your results in 5-15 seconds",
+      title: "Get your AI job-fit match score in 5-15 seconds",
       desc: "ATS score - skill gaps - cover letter - PDF export",
     },
   ];
@@ -1065,7 +1068,10 @@ function EmptyState() {
       </div>
       <div>
         <strong>Do I need a job description?</strong>
-        <span>No, a job title is enough.</span>
+        <span>
+          No, a job title is enough. Want to see how well your CV aligns with a specific role? Use our dedicated{" "}
+          <a href="/resume-job-match-checker">AI Resume Job Match Checker</a> to get a detailed compatibility score.
+        </span>
       </div>
       <div>
         <strong>Can I use it for non-tech jobs?</strong>
@@ -1231,7 +1237,49 @@ function Dashboard({
         </h2>
         <p className="summary">{result.improved_summary}</p>
       </section>
+      <EarlyAccessPanel />
     </>
+  );
+}
+
+function EarlyAccessPanel() {
+  const [leadEmail, setLeadEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  function handleEarlyAccessSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const email = leadEmail.trim();
+    if (!email) return;
+    const subject = encodeURIComponent("AI Resume Builder early access");
+    const body = encodeURIComponent(`Please add me to early access for AI Resume Builder.\n\nEmail: ${email}`);
+    window.location.href = `mailto:support@cvanalyzerai.com?subject=${subject}&body=${body}`;
+    setSubmitted(true);
+  }
+
+  return (
+    <section className="panel section-panel early-access-panel">
+      <div>
+        <h2 className="section-title">
+          <span className="section-title-icon">{Icons.spark}</span>
+          AI Resume Builder early access
+        </h2>
+        <p>
+          Want to fix these mistakes in 1 click? We are launching our AI Resume Builder this month. Drop your email to
+          get early access + 50% discount.
+        </p>
+      </div>
+      <form className="early-access-form" onSubmit={handleEarlyAccessSubmit}>
+        <input
+          type="email"
+          value={leadEmail}
+          onChange={(event) => setLeadEmail(event.target.value)}
+          placeholder="Email address"
+          aria-label="Email address for AI Resume Builder early access"
+          required
+        />
+        <button type="submit">{submitted ? "Email opened" : "Get early access"}</button>
+      </form>
+    </section>
   );
 }
 

@@ -1315,6 +1315,14 @@ button, input, select, textarea { font: inherit; }
   color: var(--text2);
 }
 
+.field-note {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--accent);
+}
+
 .field { display: grid; gap: 7px; }
 
 .field-label {
@@ -2042,6 +2050,31 @@ li strong { color: var(--text1); font-weight: 700; }
   font-size: 14px;
   line-height: 1.7;
   color: var(--text2);
+}
+
+.early-access-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 340px);
+  align-items: center;
+  gap: 18px;
+  border-color: rgba(13, 122, 95, 0.24);
+  background: var(--accent-light);
+}
+
+.early-access-panel p {
+  margin: 0;
+  color: var(--text2);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.early-access-form {
+  display: grid;
+  gap: 10px;
+}
+
+.early-access-form button {
+  min-height: 42px;
 }
 
 /* ── Tool panel ── */
@@ -2839,6 +2872,10 @@ li strong { color: var(--text1); font-weight: 700; }
   .score-grid { grid-template-columns: 1fr; }
 
   .two-columns { grid-template-columns: 1fr; }
+
+  .early-access-panel {
+    grid-template-columns: 1fr;
+  }
 
   .rewrite-row { grid-template-columns: 1fr; }
 }

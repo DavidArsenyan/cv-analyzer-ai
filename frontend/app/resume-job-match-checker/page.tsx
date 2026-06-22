@@ -59,6 +59,14 @@ export default function ResumeJobMatchCheckerPage() {
         </p>
       </section>
       <section>
+        <h2>How it works</h2>
+        <ol>
+          <li>Upload your resume (PDF, DOCX).</li>
+          <li>Paste the target job description.</li>
+          <li>Get your AI job-fit match score in 5-15 seconds.</li>
+        </ol>
+      </section>
+      <section>
         <h2>Why use an AI Resume Job Match Checker?</h2>
         <p>
           Many job seekers ask how to check if my resume matches a job description without spending hours on manual
@@ -66,8 +74,8 @@ export default function ResumeJobMatchCheckerPage() {
           resume clearly supports the role before you apply.
         </p>
         <p>
-          The free resume match score tool requires no signup for guest checks, so you can quickly review alignment,
-          missing keywords, and skill gaps before tailoring your CV for a vacancy.
+          Use CV Analyzer AI as a free resume match score tool no signup for guest checks, so you can quickly review
+          alignment, missing keywords, and skill gaps before tailoring your CV for a vacancy.
         </p>
       </section>
       <section>

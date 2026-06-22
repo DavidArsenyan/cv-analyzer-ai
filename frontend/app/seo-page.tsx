@@ -19,6 +19,7 @@ export function SeoPage({ eyebrow, title, description, children }: SeoPageProps)
         <div className="seo-nav-links">
           <Link href="/free-resume-analyzer">Resume Analyzer</Link>
           <Link href="/ats-resume-checker">ATS Checker</Link>
+          <Link href="/resume-job-match-checker">Job Match Checker</Link>
           <Link href="/contact">Contact</Link>
         </div>
       </nav>
@@ -37,4 +38,3 @@ export function SeoPage({ eyebrow, title, description, children }: SeoPageProps)
     </main>
   );
 }
-
