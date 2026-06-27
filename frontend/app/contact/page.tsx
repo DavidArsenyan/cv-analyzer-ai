@@ -28,6 +28,21 @@ export default function ContactPage() {
         </p>
       </section>
       <section>
+        <h2>Follow the project</h2>
+        <p>
+          Founder:{" "}
+          <a href="https://www.linkedin.com/in/david-arsenyan-b49158220" target="_blank" rel="noopener noreferrer">
+            David Arsenyan
+          </a>
+        </p>
+        <p>
+          Build updates, product progress, and launch news:{" "}
+          <a href="https://tiktok.com/@cvanalyzerai" target="_blank" rel="noopener noreferrer">
+            TikTok
+          </a>
+        </p>
+      </section>
+      <section>
         <h2>Privacy requests</h2>
         <p>
           For account or data deletion requests, contact us from the email address associated with your account when
@@ -37,4 +52,3 @@ export default function ContactPage() {
     </SeoPage>
   );
 }
-

@@ -42,6 +42,12 @@ type AuthUser = { id: number; email: string; is_email_verified: boolean };
 type ActiveTab = "analysis" | "tools" | "documents" | "history";
 type AuthMode = "login" | "register" | "verify" | "forgot" | "reset";
 
+declare global {
+  interface Window {
+    gtag?: (command: "event", eventName: string, params?: Record<string, string | number | boolean>) => void;
+  }
+}
+
 const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
 const enableLocalNlp = process.env.NEXT_PUBLIC_ENABLE_LOCAL_NLP === "true";
 const maxResumeBytes = 5 * 1024 * 1024;
@@ -303,6 +309,13 @@ export default function Home() {
     }
 
     const text = await response.text();
+    if (contentType.includes("text/html") || text.trim().startsWith("<!DOCTYPE") || text.includes("<html")) {
+      if (response.status === 502 || response.status === 503 || response.status === 504) {
+        return "AI analysis service is temporarily unavailable. Please try again in a moment.";
+      }
+      return fallback;
+    }
+
     return text || fallback;
   }
 
@@ -504,6 +517,20 @@ export default function Home() {
 
     setError("");
     setResume(file);
+    trackResumeFileSelected(file);
+  }
+
+  function trackResumeFileSelected(file: File) {
+    if (typeof window === "undefined" || !window.gtag) return;
+    const extension = file.name.toLowerCase().split(".").pop() ?? "unknown";
+    const sizeMb = file.size / (1024 * 1024);
+    const sizeBucket = sizeMb < 1 ? "under_1mb" : sizeMb < 3 ? "1_3mb" : "3_5mb";
+
+    window.gtag("event", "resume_file_selected", {
+      file_extension: extension,
+      file_size_bucket: sizeBucket,
+      user_status: user ? "registered" : "guest",
+    });
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
