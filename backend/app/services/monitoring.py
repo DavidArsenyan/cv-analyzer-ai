@@ -14,6 +14,7 @@ def init_monitoring() -> None:
 
     environment = os.getenv("ENV", "development").lower()
     traces_sample_rate = float(os.getenv("SENTRY_TRACES_SAMPLE_RATE", "0.05"))
+    enable_logs = os.getenv("SENTRY_ENABLE_LOGS", "true").lower() == "true"
 
     sentry_sdk.init(
         dsn=sentry_dsn,
@@ -24,4 +25,5 @@ def init_monitoring() -> None:
             SqlalchemyIntegration(),
         ],
         send_default_pii=False,
+        enable_logs=enable_logs,
     )

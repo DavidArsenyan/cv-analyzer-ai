@@ -85,3 +85,9 @@ def on_startup() -> None:
 @app.get("/health")
 def health_check() -> dict[str, str]:
     return {"status": "ok"}
+
+
+if os.getenv("SENTRY_DEBUG_ROUTE_ENABLED", "false").lower() == "true":
+    @app.get("/sentry-debug", include_in_schema=False)
+    async def trigger_sentry_error() -> None:
+        raise RuntimeError("Sentry debug route triggered")
