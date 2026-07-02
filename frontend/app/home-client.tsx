@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, ReactNode, useEffect, useState } from "react";
+import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
 
 type SkillGap = { skill: string; reason: string };
 
@@ -231,6 +231,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("analysis");
   const [dragOver, setDragOver] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const resumeFormStartedRef = useRef(false);
 
   useEffect(() => {
     const savedToken = window.localStorage.getItem("cv_analyzer_token");
@@ -489,6 +490,7 @@ export default function Home() {
     setGeneratedContent({});
     setActiveTab("analysis");
     setJobDescription("");
+    resumeFormStartedRef.current = false;
     window.localStorage.removeItem("cv_analyzer_last_result");
     window.localStorage.removeItem("cv_analyzer_generated_content");
     window.localStorage.removeItem("cv_analyzer_job_description");
@@ -496,6 +498,7 @@ export default function Home() {
   }
 
   function selectResumeFile(file: File | null) {
+    trackResumeFormStarted("resume_file");
     if (!file) {
       setResume(null);
       return;
@@ -520,13 +523,26 @@ export default function Home() {
     trackResumeFileSelected(file);
   }
 
-  function trackResumeFileSelected(file: File) {
+  function trackEvent(eventName: string, params?: Record<string, string | number | boolean>) {
     if (typeof window === "undefined" || !window.gtag) return;
+    window.gtag("event", eventName, params);
+  }
+
+  function trackResumeFormStarted(source: string) {
+    if (resumeFormStartedRef.current) return;
+    resumeFormStartedRef.current = true;
+    trackEvent("resume_form_started", {
+      source,
+      user_status: user ? "registered" : "guest",
+    });
+  }
+
+  function trackResumeFileSelected(file: File) {
     const extension = file.name.toLowerCase().split(".").pop() ?? "unknown";
     const sizeMb = file.size / (1024 * 1024);
     const sizeBucket = sizeMb < 1 ? "under_1mb" : sizeMb < 3 ? "1_3mb" : "3_5mb";
 
-    window.gtag("event", "resume_file_selected", {
+    trackEvent("resume_file_selected", {
       file_extension: extension,
       file_size_bucket: sizeBucket,
       user_status: user ? "registered" : "guest",
@@ -535,11 +551,29 @@ export default function Home() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const startedAt = performance.now();
+    const hasResume = Boolean(resume);
+    const hasJobDescription = Boolean(jobDescription.trim());
+
+    trackResumeFormStarted("analyze_button");
+    trackEvent("analysis_submit", {
+      analysis_mode: analysisMode,
+      has_resume: hasResume,
+      has_job_description: hasJobDescription,
+      user_status: user ? "registered" : "guest",
+    });
+
     setError("");
     setResult(null);
     setGeneratedContent({});
     if (!resume) {
       setError("Upload a resume file first.");
+      trackEvent("analysis_error", {
+        analysis_mode: analysisMode,
+        error_type: "missing_resume",
+        duration_ms: Math.round(performance.now() - startedAt),
+        user_status: user ? "registered" : "guest",
+      });
       return;
     }
 
@@ -549,6 +583,7 @@ export default function Home() {
     if (jobDescription.trim()) formData.append("job_description", jobDescription);
 
     setLoading(true);
+    let apiErrorTracked = false;
     try {
       const res = await fetch(`${apiUrl}/api/analyze`, {
         method: "POST",
@@ -556,12 +591,35 @@ export default function Home() {
         body: formData,
       });
       if (!res.ok) {
-        throw new Error(await readApiError(res, "Analysis failed."));
+        const message = await readApiError(res, "Analysis failed.");
+        trackEvent("analysis_error", {
+          analysis_mode: analysisMode,
+          error_type: "api_error",
+          status_code: res.status,
+          duration_ms: Math.round(performance.now() - startedAt),
+          user_status: user ? "registered" : "guest",
+        });
+        apiErrorTracked = true;
+        throw new Error(message);
       }
       setResult(await res.json());
+      trackEvent("analysis_success", {
+        analysis_mode: analysisMode,
+        has_job_description: hasJobDescription,
+        duration_ms: Math.round(performance.now() - startedAt),
+        user_status: user ? "registered" : "guest",
+      });
       setActiveTab("analysis");
       if (token) await loadHistory(token);
     } catch (e) {
+      if (!apiErrorTracked) {
+        trackEvent("analysis_error", {
+          analysis_mode: analysisMode,
+          error_type: e instanceof Error ? "network_or_client_error" : "unknown_error",
+          duration_ms: Math.round(performance.now() - startedAt),
+          user_status: user ? "registered" : "guest",
+        });
+      }
       setError(e instanceof Error ? e.message : "Analysis failed.");
     } finally {
       setLoading(false);
@@ -823,7 +881,7 @@ export default function Home() {
           )}
 
           <div className="panel-body">
-            <form onSubmit={handleSubmit} className="form">
+            <form onSubmit={handleSubmit} onFocusCapture={() => trackResumeFormStarted("form_focus")} className="form">
               {!user ? (
                 <div className="guest-start-note">
                   <strong>No registration required</strong>
