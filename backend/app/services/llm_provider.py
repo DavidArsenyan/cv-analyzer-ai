@@ -148,7 +148,7 @@ def _generate_text_with_groq(
     except ImportError as exc:
         raise LLMUnavailableError("OpenAI SDK is not installed.") from exc
 
-    model = "gpt-oss-20b"
+    model = "openai/gpt-oss-20b"
     client = OpenAI(api_key=api_key, base_url="https://api.groq.com/openai/v1")
 
     request_kwargs: dict[str, Any] = {
