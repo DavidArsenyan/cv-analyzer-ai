@@ -6,7 +6,7 @@ import re
 from typing import Any, Optional
 
 from dotenv import load_dotenv
-
+from groq import Groq
 
 load_dotenv()
 
@@ -149,7 +149,7 @@ def _generate_text_with_groq(
         raise LLMUnavailableError("OpenAI SDK is not installed.") from exc
 
     model = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")
-    client = OpenAI(api_key=api_key, base_url="https://api.groq.com/openai/v1")
+    client = Groq(api_key=api_key)
 
     request_kwargs: dict[str, Any] = {
         "model": model,
