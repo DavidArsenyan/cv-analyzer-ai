@@ -158,6 +158,9 @@ def _generate_text_with_groq(
         ],
         "max_tokens": max_output_tokens,
         "temperature": 0.2,
+        "extra_body": {
+        "reasoning_effort": "low" 
+        }
     }
     if response_format:
         request_kwargs["response_format"] = response_format
